@@ -1,4 +1,4 @@
-from nornir.core import InitNornir
+from nornir import InitNornir
 from nornir.plugins.tasks.networking import napalm_get
 
 from flask import Flask, Response
@@ -6,7 +6,7 @@ from flask import Flask, Response
 app = Flask(__name__)
 
 # Nornir will be instantiated globally to persist the connection
-nr = InitNornir(config_file="/monit/config.yaml", num_workers=100)
+nr = InitNornir(config_file="/monit/config.yaml")
 
 
 def _prometheus_metric(name, value, **kwargs):
