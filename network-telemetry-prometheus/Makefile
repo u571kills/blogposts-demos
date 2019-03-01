@@ -6,6 +6,7 @@ LEAF01=prometheus_demo_leaf01
 .PHONY: start
 start: stop build
 	docker-compose up -d
+	docker network create -d bridge --subnet 10.200.203.0/24 prometheus-nornir-snmp-replacement_management
 	docker network create -d bridge --subnet 10.200.201.0/24 prometheus-nornir-snmp-replacement_link0
 	docker network create -d bridge --subnet 10.200.202.0/24 prometheus-nornir-snmp-replacement_link1
 	make start_ceos DEVICE=$(SPINE00) PORT=12443 IP=200
@@ -24,9 +25,9 @@ stop:
 	docker rm -f $(LEAF00) || exit 0
 	docker rm -f $(LEAF01) || exit 0
 	docker-compose down
+	docker network rm prometheus-nornir-snmp-replacement_management || exit 0
 	docker network rm prometheus-nornir-snmp-replacement_link0 || exit 0
 	docker network rm prometheus-nornir-snmp-replacement_link1 || exit 0
-
 
 .PHONY: start_ceos
 start_ceos:
@@ -42,7 +43,7 @@ start_ceos:
 		-e ETBA=1 \
 		-e INTFTYPE=eth \
 		ceosimage:4.20.5F /sbin/init
-	docker network connect prometheus-nornir-snmp-replacement_management --ip 10.200.200.$(IP) $(DEVICE)
+	docker network connect prometheus-nornir-snmp-replacement_management --ip 10.200.203.$(IP) $(DEVICE)
 ifeq ($(DEVICE), $(SPINE00))
 	docker network connect prometheus-nornir-snmp-replacement_link0 --ip 10.200.201.$(IP) $(DEVICE)
 	docker network connect prometheus-nornir-snmp-replacement_link1 --ip 10.200.202.$(IP) $(DEVICE)
