@@ -29,6 +29,7 @@ You can run this demo yourself, however, you will need a couple of things:
 
 * `docker` and `docker-compose`.
 * `ceosimage:4.20.5F` which can be downloaded for free [here](https://www.arista.com/en/support/software-download) (requires registration)
+* Import image with `docker image import cEOS-lab.tar.xz ceosimage:4.20.5F`
 
 ## Project structure
 
